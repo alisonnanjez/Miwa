@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Permits – Miwa</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="/styles.css" rel="stylesheet"/>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg miwa-nav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+        <img src="/photos/Sugarcane_Logo.jpeg" alt="Miwa Logo" class="nav-logo"/>
+        Miwa
+      </a>
+      <div class="navbar-nav ms-auto d-flex flex-row gap-1">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link active" href="/permits">Permits</a>
+        <a class="nav-link" href="/bookings">Bookings</a>
+        <a class="nav-link" href="/transport">Transport</a>
+        <a class="nav-link" href="/analytics">Analytics</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page header -->
+  <div class="page-header" style="background-image: url('/photos/field_one.jpg')">
+    <div class="container page-header-content">
+      <div class="text-white">
+        <span class="hero-eyebrow">Miwa System</span>
+        <h2 class="fw-bold mt-2 mb-1">Permit Management</h2>
+        <p class="mb-0" style="color:rgba(255,255,255,0.7)">Register farmers, apply for permits, and view all active approvals.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container my-5">
+
+    <!-- Step 1: Register farmer -->
+    <div class="step-label">Step 1 — Register a New Farmer</div>
+    <div class="card shadow-sm mb-4 miwa-form-card">
+      <div class="miwa-card-header">New Farmer Registration</div>
+      <div class="card-body p-4">
+        <form id="farmerForm">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="farmer_name" placeholder="e.g. Jane Wanjiru" required/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Location</label>
+              <input type="text" class="form-control" id="farmer_location" placeholder="e.g. Mumias, Kakamega" required/>
+              <div class="form-text">County or Town </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Acreage</label>
+              <input type="number" step="0.1" class="form-control" id="farmer_acreage" placeholder="e.g. 12.5" required/>
+            </div>
+          </div>
+          <div class="mt-3">
+            <button type="submit" class="btn btn-success px-4">Register Farmer</button>
+          </div>
+        </form>
+        <div id="farmerMessage" class="mt-3"></div>
+      </div>
+    </div>
+
+    <!-- Step 2: Apply for permit -->
+    <div class="step-label">Step 2 — Apply for a Harvest Permit</div>
+    <div class="card shadow-sm mb-5 miwa-form-card">
+      <div class="miwa-card-header">📋 Permit Application</div>
+      <div class="card-body p-4">
+        <form id="permitForm">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Farmer ID</label>
+              <input type="number" class="form-control" id="farmer_id" placeholder="e.g. 6" required/>
+              <div class="form-text">Check the farmers table below for IDs.</div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Tonnage Capacity</label>
+              <input type="number" class="form-control" id="tonnage" placeholder="e.g. 50" required/>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Expiry Date</label>
+              <input type="date" class="form-control" id="expiry_date" required/>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <button type="submit" class="btn btn-success w-100">Submit Application</button>
+            </div>
+          </div>
+        </form>
+        <div id="permitMessage" class="mt-3"></div>
+      </div>
+    </div>
+
+    <!-- All Farmers table -->
+    <div class="card shadow-sm mb-5 miwa-form-card">
+      <div class="miwa-card-header">🧑‍🌾 All Registered Farmers</div>
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Acreage</th>
+              <th>Active Permits</th>
+            </tr>
+          </thead>
+          <tbody id="farmersBody">
+            <tr><td colspan="5" class="text-center text-muted py-4">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Approved Permits table -->
+    <div class="card shadow-sm miwa-form-card">
+      <div class="miwa-card-header">✅ Approved Active Permits</div>
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Permit #</th>
+              <th>Farmer</th>
+              <th>Farm Size (acres)</th>
+              <th>Tonnage (t)</th>
+              <th>Expiry Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="permitsBody">
+            <tr><td colspan="6" class="text-center text-muted py-4">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>© 2026 Miwa Logistics · Built with Express & SQLite</footer>
+
+  <script>
+    // ── Geocode location name via Nominatim ───────────────────
+    async function geocode(locationName) {
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationName)}&format=json&limit=1`;
+      const res  = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+      const data = await res.json();
+      if (data.length === 0) return null;
+      return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+    }
+
+    async function loadFarmers() {
+      const res  = await fetch('/api/v1/farmers');
+      const data = await res.json();
+      const tbody = document.getElementById('farmersBody');
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No farmers registered yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(f => `
+        <tr>
+          <td><span class="badge bg-success">${f.id}</span></td>
+          <td><strong>${f.name}</strong></td>
+          <td>${f.location_name ?? '—'}</td>
+          <td>${f.acreage} ac</td>
+          <td>${f.active_permits > 0
+            ? `<span class="badge bg-success">${f.active_permits} active</span>`
+            : `<span class="badge bg-secondary">None</span>`}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadPermits() {
+      const res  = await fetch('/api/v1/permits/approved');
+      const data = await res.json();
+      const tbody = document.getElementById('permitsBody');
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No approved permits found.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(p => `
+        <tr>
+          <td><span class="badge bg-success">${p.permit_number}</span></td>
+          <td><strong>${p.farmer_name}</strong></td>
+          <td>${p.farm_acreage} ac</td>
+          <td>${p.tonnage_capacity} t</td>
+          <td>${new Date(p.expiry_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</td>
+          <td><span class="badge bg-success">Approved</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // ── Register farmer ───────────────────────────────────────
+    document.getElementById('farmerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msgDiv   = document.getElementById('farmerMessage');
+      const name     = document.getElementById('farmer_name').value;
+      const location = document.getElementById('farmer_location').value;
+      const acreage  = parseFloat(document.getElementById('farmer_acreage').value);
+
+      msgDiv.innerHTML = `<div class="alert alert-info">Looking up coordinates for "${location}"...</div>`;
+
+      const coords = await geocode(location);
+      if (!coords) {
+        msgDiv.innerHTML = `<div class="alert alert-danger">Could not find "${location}" on the map. Try a nearby town name.</div>`;
+        return;
+      }
+
+      const res  = await fetch('/api/v1/farmers/register', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          name,
+          location_name: location,
+          location_lat:  coords.lat,
+          location_long: coords.lon,
+          acreage,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        msgDiv.innerHTML = `<div class="alert alert-success">${data.message} — their ID is <strong>${data.farmer.id}</strong>. Use it in Step 2.</div>`;
+        document.getElementById('farmerForm').reset();
+        loadFarmers();
+      } else {
+        msgDiv.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+      }
+    });
+
+    // ── Apply for permit ──────────────────────────────────────
+    document.getElementById('permitForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msgDiv = document.getElementById('permitMessage');
+      const body = {
+        farmer_id:        parseInt(document.getElementById('farmer_id').value),
+        tonnage_capacity: parseFloat(document.getElementById('tonnage').value),
+        expiry_date:      document.getElementById('expiry_date').value,
+      };
+      const res  = await fetch('/api/v1/permits/apply', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        msgDiv.innerHTML = `<div class="alert alert-success">${data.message} — <strong>${data.permit.permit_number}</strong></div>`;
+        document.getElementById('permitForm').reset();
+        loadPermits();
+      } else {
+        msgDiv.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+      }
+    });
+
+    loadFarmers();
+    loadPermits();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

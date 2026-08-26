@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Miwa – Sugarcane Logistics</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="/styles.css" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg miwa-nav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+        <img src="/photos/Sugarcane_Logo.jpeg" alt="Miwa Logo" class="nav-logo"/>
+        Miwa
+      </a>
+      <div class="navbar-nav ms-auto d-flex flex-row gap-1">
+        <a class="nav-link active" href="/">Home</a>
+        <a class="nav-link" href="/permits">Permits</a>
+        <a class="nav-link" href="/bookings">Bookings</a>
+        <a class="nav-link" href="/transport">Transport</a>
+        <a class="nav-link" href="/analytics">Analytics</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero — uses field_2.jpg as background via styles.css -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="container">
+      <div class="hero-content">
+        <span class="hero-eyebrow">Kenyan Sugarcane Logistics</span>
+        <h1 class="hero-title">From <em>Field</em> to<br/>Factory, Tracked.</h1>
+        <p class="hero-sub">Miwa manages harvest permits, optimizes transport routes, and delivers real-time analytics — all in one place.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="/permits"   class="btn-turquoise">Manage Permits</a>
+          <a href="/analytics" class="btn-outline-turquoise">View Analytics</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stat strip -->
+  <div class="stat-strip">
+    <div class="container">
+      <div class="row text-center g-4">
+        <div class="col-4 stat-item">
+          <h3>5</h3>
+          <p>Registered Farmers</p>
+        </div>
+        <div class="col-4 stat-item">
+          <h3>3</h3>
+          <p>Active Permits</p>
+        </div>
+        <div class="col-4 stat-item">
+          <h3>320t</h3>
+          <p>Total Quota</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature cards -->
+  <section class="py-5">
+    <div class="container">
+      <div class="mb-5">
+        <p class="section-label">What Miwa Does</p>
+        <h2 class="section-title">Three pillars of<br/>sugarcane logistics</h2>
+      </div>
+      <div class="row g-4">
+
+        <div class="col-md-4">
+          <div class="card feature-card shadow-sm h-100">
+            <img src="/photos/permit.jpeg" alt="Sugarcane field" class="feature-card-img"/>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title mb-2">Permit Management</h5>
+              <p class="text-muted flex-grow-1" style="font-size:0.9rem">Apply for harvest permits, check farmer eligibility, and track approval status in real time.</p>
+              <a href="/permits" class="btn btn-success mt-3">Go to Permits →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card feature-card shadow-sm h-100">
+            <img src="/photos/truck.jpeg" alt="Sugarcane field" class="feature-card-img"/>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title mb-2">Transport Optimization</h5>
+              <p class="text-muted flex-grow-1" style="font-size:0.9rem">See the most efficient pickup route across all scheduled farm bookings, organised stop by stop.</p>
+              <a href="/transport" class="btn btn-success mt-3">View Transport Route →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card feature-card shadow-sm h-100">
+            <img src="/photos/analytics.jpeg" alt="Sugarcane field" class="feature-card-img"/>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title mb-2">Analytics Dashboard</h5>
+              <p class="text-muted flex-grow-1" style="font-size:0.9rem">Monitor tonnage quotas vs deliveries and measure efficiency from permit issuance to cane delivered.</p>
+              <a href="/analytics" class="btn btn-success mt-3">Go to Analytics →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Field photo strip -->
+  <div class="field-strip">
+    <img src="/photos/mumias.jpeg" alt="Sugarcane field"/>
+    <img src="/photos/west_valley.jpeg"  alt="Sugarcane field"/>
+    <img src="/photos/nzoia_sugar.jpeg"  alt="Sugarcane field"/>
+  </div>
+
+  <footer>© 2026 Miwa Logistics · Built with Express & SQLite</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

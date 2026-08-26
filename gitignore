@@ -1,0 +1,15 @@
+# Database
+miwa.db
+
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Mac system files
+.DS_Store
+
+# Logs
+npm-debug.log*
+nodemon-debug.log*
